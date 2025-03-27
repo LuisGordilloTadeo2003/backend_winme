@@ -1,0 +1,45 @@
+created:
+    - database/factories/GroupFactory.php
+    - database/factories/LevelFactory.php
+    - database/factories/BetFactory.php
+    - database/factories/ChallengeFactory.php
+    - database/factories/TeamFactory.php
+    - database/factories/OptionFactory.php
+    - database/factories/InventoryFactory.php
+    - database/factories/ObjectFactory.php
+    - database/factories/DailyRewardFactory.php
+    - database/migrations/2025_03_27_183111_create_groups_table.php
+    - database/migrations/2025_03_27_183112_create_levels_table.php
+    - database/migrations/2025_03_27_183113_create_bets_table.php
+    - database/migrations/2025_03_27_183114_create_challenges_table.php
+    - database/migrations/2025_03_27_183115_create_teams_table.php
+    - database/migrations/2025_03_27_183116_create_options_table.php
+    - database/migrations/2025_03_27_183117_create_inventories_table.php
+    - database/migrations/2025_03_27_183118_create_objects_table.php
+    - database/migrations/2025_03_27_183119_create_daily_rewards_table.php
+    - database/migrations/2025_03_27_183120_create_group_user_table.php
+    - database/migrations/2025_03_27_183121_create_bet_user_table.php
+    - database/migrations/2025_03_27_183122_create_bet_team_table.php
+    - database/migrations/2025_03_27_183123_create_challenge_team_table.php
+    - database/migrations/2025_03_27_183124_create_team_user_table.php
+    - database/migrations/2025_03_27_183125_create_option_user_table.php
+    - database/migrations/2025_03_27_183126_create_inventory_object_table.php
+    - app/Models/Group.php
+    - app/Models/Level.php
+    - app/Models/Bet.php
+    - app/Models/Challenge.php
+    - app/Models/Team.php
+    - app/Models/Option.php
+    - app/Models/Inventory.php
+    - app/Models/Object.php
+    - app/Models/DailyReward.php
+models:
+    Group: { title: string, maxMembers: 'integer default:100', picture: string, isPublic: 'boolean default:false', invitationCode: integer, isPremium: 'boolean default:false', dailyBets: 'integer default:5', points: 'integer default:0', description: text, relationships: { belongsToMany: User, hasMany: 'Challenge, Team, Bet', belongsTo: Level } }
+    Level: { title: string, color: string, points: 'integer default:0', type: 'enum:group,team,user', relationships: { hasMany: 'Group, Team, User' } }
+    Bet: { title: string, description: text, closesAt: timestamp, startsAt: timestamp, isPublic: 'boolean default:false', status: 'enum:active,complete,waiting default:waiting', relationships: { belongsTo: 'User, Group', belongsToMany: 'User, Team', hasMany: Option } }
+    Challenge: { title: string, challengeType: string, status: 'enum:active,complete,waiting', startsAt: timestamp, closesAt: timestamp, relationships: { belongsToMany: Team, belongsTo: Group } }
+    Team: { title: string, points: 'integer default:0', relationships: { belongsToMany: 'User, Challenge, Bet', belongsTo: 'Group, Level' } }
+    Option: { title: string, isWinner: 'boolean default:false', relationships: { belongsTo: Bet, belongsToMany: 'User, User' } }
+    Inventory: { maxCapacity: 'integer default:50', relationships: { hasOne: User, belongsToMany: Object } }
+    Object: { title: string, type: string, rarity: 'enum:common,special,legendary,impossible', price: integer, isPremium: boolean, relationships: { belongsToMany: Inventory } }
+    DailyReward: { title: string, reward: string, accumulation: integer, lastLogin: timestamp, relationships: { hasOne: User } }

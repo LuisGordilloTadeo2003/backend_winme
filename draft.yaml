@@ -1,0 +1,82 @@
+models:
+  Group:
+    title: string
+    maxMembers: integer default:100
+    picture: string
+    isPublic: boolean default:false
+    invitationCode: integer
+    isPremium: boolean default:false
+    dailyBets: integer default:5
+    points: integer default:0
+    description: text
+    relationships:
+      belongsToMany: User
+      hasMany: Challenge, Team, Bet
+      belongsTo: Level
+
+  Level:
+    title: string
+    color: string
+    points: integer default:0
+    type: enum:group,team,user
+    relationships:
+      hasMany: Group, Team, User
+
+  Bet:
+    title: string
+    description: text
+    closesAt: timestamp
+    startsAt: timestamp
+    isPublic: boolean default:false
+    status: enum:active,complete,waiting default:waiting
+    relationships:
+      belongsTo: User, Group
+      belongsToMany: User, Team
+      hasMany: Option
+
+  Challenge:
+    title: string
+    challengeType: string
+    status: enum:active,complete,waiting
+    startsAt: timestamp
+    closesAt: timestamp
+    relationships:
+      belongsToMany: Team
+      belongsTo: Group
+
+  Team:
+    title: string
+    points: integer default:0
+    relationships:
+      belongsToMany: User, Challenge, Bet
+      belongsTo: Group, Level
+
+  Option:
+    title: string
+    isWinner: boolean default:false
+    relationships:
+      belongsTo: Bet
+      belongsToMany: User, User
+
+  Inventory:
+    maxCapacity: integer default:50
+    relationships:
+      hasOne: User
+      belongsToMany: Object
+
+  Object:
+    title: string
+    type: string
+    rarity: enum:common,special,legendary,impossible
+    price: integer
+    isPremium: boolean
+    relationships:
+      belongsToMany: Inventory
+
+  DailyReward:
+    title: string
+    reward: string
+    accumulation: integer
+    lastLogin: timestamp
+    relationships:
+      hasOne: User
